@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Codespace weather</string>
+
+    <!-- Fragment title -->
+    <string name="current_weather_title">Today</string>
+    <string name="future_weather_title">10 days</string>
+
 </resources>
