@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ivanferrant.codespaceweather.model.CurrentCondition;
+import com.ivanferrant.codespaceweather.helper.WeatherHelper;
+import com.ivanferrant.codespaceweather.model.LocationWeather;
 import com.ivanferrant.codespaceweather.network.RequestService;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -21,7 +22,11 @@ public class CurrentWeatherFragment extends Fragment {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     // Views
+    private TextView time;
+    private TextView maxMinTemp;
     private TextView temperature;
+    private TextView feelsLike;
+    private TextView weatherDesc;
 
     public CurrentWeatherFragment() {}
 
@@ -39,7 +44,11 @@ public class CurrentWeatherFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_current_weather, container, false);
-        this.temperature = root.findViewById(R.id.tv_temp);
+        this.time = root.findViewById(R.id.tv_time);
+        this.maxMinTemp = root.findViewById(R.id.tv_max_min_temp);
+        this.temperature = root.findViewById(R.id.tv_temperature);
+        this.feelsLike = root.findViewById(R.id.tv_temp_feel);
+        this.weatherDesc = root.findViewById(R.id.tv_weather_desc);
         return root;
     }
 
@@ -62,11 +71,29 @@ public class CurrentWeatherFragment extends Fragment {
     }
 
     /**
-     * Set the view with the values of {@link CurrentCondition}
-     * @param currentCondition {@link CurrentCondition} object with the weather condition
+     * Set the view with the values of {@link LocationWeather}
+     * @param locationWeather {@link LocationWeather} object with the weather condition
      */
-    private void setWeatherValues(CurrentCondition currentCondition) {
-        this.temperature.setText(currentCondition.getTempC());
+    private void setWeatherValues(LocationWeather locationWeather) {
+        WeatherHelper weatherHelper = new WeatherHelper(locationWeather);
+        // Format temperatures
+        String maxMin = String.format(
+                this.getResources().getString(R.string.min_max_temperature_c),
+                weatherHelper.getTodayMaxTempC(),
+                weatherHelper.getTodayMinTempC());
+        String currentTemp = String.format(
+                this.getResources().getString(R.string.current_temp_c),
+                weatherHelper.getCurrentTempC());
+        String feels = String.format(
+                this.getResources().getString(R.string.temp_feels_c),
+                weatherHelper.getCurrentTempFeelsC());
+
+        // Set views
+        this.time.setText(weatherHelper.getObservationTime());
+        this.maxMinTemp.setText(maxMin);
+        this.temperature.setText(currentTemp);
+        this.feelsLike.setText(feels);
+        this.weatherDesc.setText(weatherHelper.getCurrentWeatherDesc());
     }
 
     /**
