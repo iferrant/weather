@@ -19,4 +19,18 @@ public class RequestService {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    /**
+     * Request current weather of a coordinates
+     * @param latitude Latitude
+     * @param longitude Longitude
+     * @return {@link Observable} with a {@link LocationWeather} object of the coordinates
+     */
+    public Observable<LocationWeather> currentWeather(double latitude, double longitude) {
+        String query = String.valueOf(latitude) + "," + String.valueOf(longitude);
+        IEndpoints service = ServiceGenerator.retrofit().create(IEndpoints.class);
+        return service.getCountryWeather(query)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }
