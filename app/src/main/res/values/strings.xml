@@ -3,7 +3,7 @@
 
     <!-- Fragment title -->
     <string name="current_weather_title">Today</string>
-    <string name="future_weather_title">10 days</string>
+    <string name="future_weather_title">5 days</string>
 
     <!-- Weather strings -->
     <string name="min_max_temperature_c">Day %1$s°, Night %2$s°</string>

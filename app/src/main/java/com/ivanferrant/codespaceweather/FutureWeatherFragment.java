@@ -63,9 +63,9 @@ public class FutureWeatherFragment extends Fragment implements OnLocationWeather
     }
 
     private void setAdapterData(List<Weather> weather) {
-        // We just want a maximum of 10 days of prediction
-        if (weather.size() >= 10) {
-            weather = weather.subList(0, 10);
+        // We just want a maximum of 5 days of prediction
+        if (weather.size() >= 5) {
+            weather = weather.subList(0, 5);
         }
         mPredictionListAdapter = new PredictionListAdapter(weather);
         mRecyclerView.setAdapter(mPredictionListAdapter);
