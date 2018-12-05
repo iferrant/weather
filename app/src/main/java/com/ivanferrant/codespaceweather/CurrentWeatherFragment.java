@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ivanferrant.codespaceweather.helper.WeatherHelper;
@@ -20,6 +22,8 @@ public class CurrentWeatherFragment extends Fragment implements OnLocationWeathe
     private TextView temperature;
     private TextView feelsLike;
     private TextView weatherDesc;
+    private TextView emptyState;
+    private LinearLayout mainLayout;
 
     public CurrentWeatherFragment() {}
 
@@ -41,22 +45,25 @@ public class CurrentWeatherFragment extends Fragment implements OnLocationWeathe
         this.temperature = root.findViewById(R.id.tv_temperature);
         this.feelsLike = root.findViewById(R.id.tv_temp_feel);
         this.weatherDesc = root.findViewById(R.id.tv_weather_desc);
+        this.mainLayout = root.findViewById(R.id.ll_current_weather_main);
+        this.emptyState = root.findViewById(R.id.tv_empty_state);
         return root;
     }
 
 
     @Override
     public void onData(LocationWeather locationWeather) {
-        setWeatherValues(locationWeather);
+        WeatherHelper weatherHelper = new WeatherHelper(locationWeather);
+        setEmptyState(weatherHelper.hasWeather());
+        setWeatherValues(weatherHelper);
     }
 
 
     /**
-     * Set the view with the values of {@link LocationWeather}
-     * @param locationWeather {@link LocationWeather} object with the weather condition
+     * Set the view with the values of {@link WeatherHelper}
+     * @param weatherHelper {@link WeatherHelper} object with the weather condition
      */
-    private void setWeatherValues(LocationWeather locationWeather) {
-        WeatherHelper weatherHelper = new WeatherHelper(locationWeather);
+    private void setWeatherValues(WeatherHelper weatherHelper) {
         // Format temperatures
         String maxMin = String.format(
                 this.getResources().getString(R.string.min_max_temperature_c),
@@ -75,6 +82,15 @@ public class CurrentWeatherFragment extends Fragment implements OnLocationWeathe
         this.temperature.setText(currentTemp);
         this.feelsLike.setText(feels);
         this.weatherDesc.setText(weatherHelper.getCurrentWeatherDesc());
+    }
+
+    /**
+     * Checks if the {@link LocationWeather} object has weather data
+     * @param hasWeather True if there is weather data
+     */
+    private void setEmptyState(boolean hasWeather) {
+        this.mainLayout.setVisibility(hasWeather? View.VISIBLE : View.GONE);
+        this.emptyState.setVisibility(hasWeather? View.GONE : View.VISIBLE);
     }
 
 }

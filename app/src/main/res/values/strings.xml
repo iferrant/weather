@@ -14,5 +14,7 @@
     <string name="search">Search</string>
     <string name="search_hint">Search places</string>
 
+    <!-- Empty state -->
+    <string name="empty_state">No results, try again!</string>
 
 </resources>

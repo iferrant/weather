@@ -7,8 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.ivanferrant.codespaceweather.adapter.PredictionListAdapter;
+import com.ivanferrant.codespaceweather.helper.WeatherHelper;
 import com.ivanferrant.codespaceweather.model.LocationWeather;
 import com.ivanferrant.codespaceweather.model.Weather;
 
@@ -20,6 +22,7 @@ public class FutureWeatherFragment extends Fragment implements OnLocationWeather
 
     private PredictionListAdapter mPredictionListAdapter;
     private RecyclerView mRecyclerView;
+    private TextView emptyState;
 
     public FutureWeatherFragment() {}
 
@@ -37,6 +40,7 @@ public class FutureWeatherFragment extends Fragment implements OnLocationWeather
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_future_weather, container, false);
 
+        emptyState = root.findViewById(R.id.tv_empty_state);
         mRecyclerView = root.findViewById(R.id.rv_prediction);
         mRecyclerView.setHasFixedSize(true);
         // Set layout manager
@@ -51,20 +55,29 @@ public class FutureWeatherFragment extends Fragment implements OnLocationWeather
 
     @Override
     public void onData(LocationWeather locationWeather) {
-        setAdapterData(locationWeather);
+        WeatherHelper weatherHelper = new WeatherHelper(locationWeather);
+        setEmptyState(weatherHelper.hasWeather());
+        if (weatherHelper.hasWeather()) {
+            setAdapterData(weatherHelper.getWeather());
+        }
     }
 
-    private void setAdapterData(LocationWeather locationWeather) {
-        if (locationWeather != null && locationWeather.getData() != null
-                && locationWeather.getData().getWeather() != null) {
-            List<Weather> weather = locationWeather.getData().getWeather();
-            // We just want a maximum of 10 days of prediction
-            if (weather.size() >= 10) {
-                weather = weather.subList(0, 10);
-            }
-            mPredictionListAdapter = new PredictionListAdapter(weather);
-            mRecyclerView.setAdapter(mPredictionListAdapter);
+    private void setAdapterData(List<Weather> weather) {
+        // We just want a maximum of 10 days of prediction
+        if (weather.size() >= 10) {
+            weather = weather.subList(0, 10);
         }
+        mPredictionListAdapter = new PredictionListAdapter(weather);
+        mRecyclerView.setAdapter(mPredictionListAdapter);
+    }
+
+    /**
+     * Checks if the {@link LocationWeather} object has weather data
+     * @param hasWeather True if there is weather data
+     */
+    private void setEmptyState(boolean hasWeather) {
+        this.mRecyclerView.setVisibility(hasWeather? View.VISIBLE : View.GONE);
+        this.emptyState.setVisibility(hasWeather? View.GONE : View.VISIBLE);
     }
 
 }

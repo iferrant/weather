@@ -2,9 +2,12 @@ package com.ivanferrant.codespaceweather.helper;
 
 import com.ivanferrant.codespaceweather.model.CurrentCondition;
 import com.ivanferrant.codespaceweather.model.LocationWeather;
+import com.ivanferrant.codespaceweather.model.Weather;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class WeatherHelper {
@@ -66,12 +69,22 @@ public class WeatherHelper {
     }
 
     /**
+     * Get the list {@link Weather} objects
+     * @return List of {@link Weather} objects
+     */
+    public List<Weather> getWeather() {
+        if (hasWeather()) {
+            return locationWeather.getData().getWeather();
+        }
+        return new ArrayList<>();
+    }
+
+    /**
      * Gets the maximum temperature in Celsius for today
      * @return String with the maximum temperature in Celsius
      */
     public String getTodayMaxTempC() {
-        if (hasData() && locationWeather.getData().getWeather() != null
-                && locationWeather.getData().getWeather().size() > 0) {
+        if (hasWeather() && locationWeather.getData().getWeather().size() > 0) {
             return locationWeather.getData().getWeather().get(0).getMaxtempC();
         }
         return "";
@@ -82,11 +95,18 @@ public class WeatherHelper {
      * @return String with the minimum temperature in Celsius
      */
     public String getTodayMinTempC() {
-        if (hasData() && locationWeather.getData().getWeather() != null
-                && locationWeather.getData().getWeather().size() > 0) {
+        if (hasWeather() && locationWeather.getData().getWeather().size() > 0) {
             return locationWeather.getData().getWeather().get(0).getMintempC();
         }
         return "";
+    }
+
+    /**
+     * Checks if the {@link LocationWeather} object has weather data
+     * @return True if contains weather data
+     */
+    public boolean hasWeather() {
+        return hasData() && locationWeather.getData().getWeather() != null;
     }
 
     private CurrentCondition getCurrentCondition() {
