@@ -6,12 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ivanferrant.codespaceweather.helper.WeatherHelper;
-import com.ivanferrant.codespaceweather.model.LocationWeather;
 
 
 public class CurrentWeatherFragment extends Fragment implements OnLocationWeather {
@@ -52,8 +50,7 @@ public class CurrentWeatherFragment extends Fragment implements OnLocationWeathe
 
 
     @Override
-    public void onData(LocationWeather locationWeather) {
-        WeatherHelper weatherHelper = new WeatherHelper(locationWeather);
+    public void onData(WeatherHelper weatherHelper) {
         setEmptyState(weatherHelper.hasWeather());
         setWeatherValues(weatherHelper);
     }
@@ -85,7 +82,7 @@ public class CurrentWeatherFragment extends Fragment implements OnLocationWeathe
     }
 
     /**
-     * Checks if the {@link LocationWeather} object has weather data
+     * Checks if the {@link WeatherHelper} object has weather data
      * @param hasWeather True if there is weather data
      */
     private void setEmptyState(boolean hasWeather) {

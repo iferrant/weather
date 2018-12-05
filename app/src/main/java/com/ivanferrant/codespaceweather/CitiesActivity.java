@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.ivanferrant.codespaceweather.adapter.SimpleFragmentPagerAdapter;
+import com.ivanferrant.codespaceweather.helper.WeatherHelper;
 import com.ivanferrant.codespaceweather.model.LocationWeather;
 import com.ivanferrant.codespaceweather.network.RequestService;
 
@@ -173,7 +174,7 @@ public class CitiesActivity extends AppCompatActivity {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         for (Fragment fragment: fragments) {
             if (fragment instanceof OnLocationWeather) {
-                ((OnLocationWeather) fragment).onData(locationWeather);
+                ((OnLocationWeather) fragment).onData(new WeatherHelper(locationWeather));
             }
         }
 

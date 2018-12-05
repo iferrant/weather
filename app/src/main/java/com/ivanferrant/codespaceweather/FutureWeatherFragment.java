@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.ivanferrant.codespaceweather.adapter.PredictionListAdapter;
 import com.ivanferrant.codespaceweather.helper.WeatherHelper;
-import com.ivanferrant.codespaceweather.model.LocationWeather;
 import com.ivanferrant.codespaceweather.model.Weather;
 
 import java.util.ArrayList;
@@ -54,8 +53,7 @@ public class FutureWeatherFragment extends Fragment implements OnLocationWeather
     }
 
     @Override
-    public void onData(LocationWeather locationWeather) {
-        WeatherHelper weatherHelper = new WeatherHelper(locationWeather);
+    public void onData(WeatherHelper weatherHelper) {
         setEmptyState(weatherHelper.hasWeather());
         if (weatherHelper.hasWeather()) {
             setAdapterData(weatherHelper.getWeather());
@@ -72,7 +70,7 @@ public class FutureWeatherFragment extends Fragment implements OnLocationWeather
     }
 
     /**
-     * Checks if the {@link LocationWeather} object has weather data
+     * Checks if the {@link WeatherHelper} object has weather data
      * @param hasWeather True if there is weather data
      */
     private void setEmptyState(boolean hasWeather) {

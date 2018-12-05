@@ -14,10 +14,7 @@ public class RequestService {
      * @return {@link Observable} with a {@link LocationWeather} object of the {@param location}
      */
     public Observable<LocationWeather> currentWeather(String location) {
-        IEndpoints service = ServiceGenerator.retrofit().create(IEndpoints.class);
-        return service.getCountryWeather(location)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return generateCurrentWeatherService(location);
     }
 
     /**
@@ -28,6 +25,10 @@ public class RequestService {
      */
     public Observable<LocationWeather> currentWeather(double latitude, double longitude) {
         String query = String.valueOf(latitude) + "," + String.valueOf(longitude);
+        return generateCurrentWeatherService(query);
+    }
+
+    private Observable<LocationWeather> generateCurrentWeatherService(String query) {
         IEndpoints service = ServiceGenerator.retrofit().create(IEndpoints.class);
         return service.getCountryWeather(query)
                 .subscribeOn(Schedulers.io())
