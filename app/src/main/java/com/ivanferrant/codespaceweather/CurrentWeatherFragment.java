@@ -2,7 +2,6 @@ package com.ivanferrant.codespaceweather;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +10,9 @@ import android.widget.TextView;
 
 import com.ivanferrant.codespaceweather.helper.WeatherHelper;
 import com.ivanferrant.codespaceweather.model.LocationWeather;
-import com.ivanferrant.codespaceweather.network.RequestService;
-
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 
-public class CurrentWeatherFragment extends Fragment {
-
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+public class CurrentWeatherFragment extends Fragment implements OnLocationWeather {
 
     // Views
     private TextView time;
@@ -37,7 +30,6 @@ public class CurrentWeatherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestCurrentWeather();
     }
 
     @Override
@@ -52,23 +44,12 @@ public class CurrentWeatherFragment extends Fragment {
         return root;
     }
 
+
     @Override
-    public void onDestroy() {
-        compositeDisposable.clear();
-        super.onDestroy();
+    public void onData(LocationWeather locationWeather) {
+        setWeatherValues(locationWeather);
     }
 
-    /**
-     * Request current weather of an specific location
-     */
-    private void requestCurrentWeather() {
-        RequestService requestService = new RequestService();
-        Disposable d = requestService.currentWeather("").subscribe(
-                this::setWeatherValues,
-                this::handleError
-        );
-        compositeDisposable.add(d);
-    }
 
     /**
      * Set the view with the values of {@link LocationWeather}
@@ -94,17 +75,6 @@ public class CurrentWeatherFragment extends Fragment {
         this.temperature.setText(currentTemp);
         this.feelsLike.setText(feels);
         this.weatherDesc.setText(weatherHelper.getCurrentWeatherDesc());
-    }
-
-    /**
-     * Handle request error
-     * @param t {@link Throwable} object
-     */
-    private void handleError(Throwable t) {
-        if (getActivity() != null) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content),
-                    "Something went wrong", Snackbar.LENGTH_LONG).show();
-        }
     }
 
 }

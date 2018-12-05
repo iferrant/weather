@@ -1,7 +1,6 @@
 package com.ivanferrant.codespaceweather;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,17 +11,13 @@ import android.view.ViewGroup;
 import com.ivanferrant.codespaceweather.adapter.PredictionListAdapter;
 import com.ivanferrant.codespaceweather.model.LocationWeather;
 import com.ivanferrant.codespaceweather.model.Weather;
-import com.ivanferrant.codespaceweather.network.RequestService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
-public class FutureWeatherFragment extends Fragment {
+public class FutureWeatherFragment extends Fragment implements OnLocationWeather{
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private PredictionListAdapter mPredictionListAdapter;
     private RecyclerView mRecyclerView;
 
@@ -35,7 +30,6 @@ public class FutureWeatherFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.requestCurrentWeather();
     }
 
     @Override
@@ -56,21 +50,8 @@ public class FutureWeatherFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        this.compositeDisposable.clear();
-        super.onDestroy();
-    }
-
-    /**
-     * Request current weather of an specific location
-     */
-    private void requestCurrentWeather() {
-        RequestService requestService = new RequestService();
-        Disposable d = requestService.currentWeather("").subscribe(
-                this::setAdapterData,
-                this::handleError
-        );
-        compositeDisposable.add(d);
+    public void onData(LocationWeather locationWeather) {
+        setAdapterData(locationWeather);
     }
 
     private void setAdapterData(LocationWeather locationWeather) {
@@ -83,17 +64,6 @@ public class FutureWeatherFragment extends Fragment {
             }
             mPredictionListAdapter = new PredictionListAdapter(weather);
             mRecyclerView.setAdapter(mPredictionListAdapter);
-        }
-    }
-
-    /**
-     * Handle request error
-     * @param t {@link Throwable} object
-     */
-    private void handleError(Throwable t) {
-        if (getActivity() != null) {
-            Snackbar.make(getActivity().findViewById(android.R.id.content),
-                    "Something went wrong", Snackbar.LENGTH_LONG).show();
         }
     }
 
