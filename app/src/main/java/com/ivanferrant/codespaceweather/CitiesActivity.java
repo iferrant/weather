@@ -51,14 +51,15 @@ public class CitiesActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
         getMenuInflater().inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        item.setShowAsAction(
-                MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-        SearchView searchView = (SearchView) item.getActionView();
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                searchMenuItem.collapseActionView();
+                changeToolbarTitle(query);
                 requestCurrentWeather(query);
                 return true;
             }
@@ -70,6 +71,12 @@ public class CitiesActivity extends AppCompatActivity {
         });
 
         return true;
+    }
+
+    private void changeToolbarTitle(String title) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title.toUpperCase());
+        }
     }
 
     /**
