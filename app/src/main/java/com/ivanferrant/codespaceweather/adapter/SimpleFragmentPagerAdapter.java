@@ -20,7 +20,8 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return position == 0? new CurrentWeatherFragment() : new FutureWeatherFragment();
+        return position == 0?
+                CurrentWeatherFragment.newInstance() : FutureWeatherFragment.newInstance();
     }
 
     @Override

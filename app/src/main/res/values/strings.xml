@@ -10,4 +10,9 @@
     <string name="current_temp_c">%1$s°</string>
     <string name="temp_feels_c">Feel likes %1$s°</string>
 
+    <!-- Search -->
+    <string name="search">Search</string>
+    <string name="search_hint">Search places</string>
+
+
 </resources>
